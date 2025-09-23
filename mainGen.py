@@ -44,3 +44,5 @@ indice, aptitudFinal = poblacionzila.encontrar_mejor_individuo(individuosMutados
 print("la mejor solucion se encuentra en:" + str(indice))
 print("imprimiendo mejor individuo:"+ str(individuosMutados[indice]))
 print("con aptitud de:" + str(aptitudFinal))
+
+print("aaa")
