@@ -65,9 +65,10 @@ def get_items():
         })
 def post_item( gananciaParametro: float, pesoParametro: float):
     nuevoItem = item(
-        id=len (items2) +1 , 
+        id=idConteo, 
         ganancia=gananciaParametro, 
         peso=pesoParametro)
+    idConteo += 1 
     items2.append(nuevoItem)
 
     return items2
@@ -84,10 +85,11 @@ def post_item( gananciaParametro: float, pesoParametro: float):
         })
 def post_items(nuevo_item: itemBase):
     nuevo = item(
-        id=len(items2) + 1,
+        id=idConteo,
         ganancia=nuevo_item.ganancia,
         peso=nuevo_item.peso
     )
+    idConteo +=1 
     items2.append(nuevo)
     return items2
 
