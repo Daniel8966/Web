@@ -107,11 +107,58 @@ def get_item(item_id: int) :
         raise HTTPException(status_code=404, detail="item no contrado")
 
 
+@app.put("/itemsActualizar/{item_id}", 
+        response_description="devuelve la lista actualizada",
+        status_code=200,
+        tags=["Items"],
+        summary="Ruta para cambiar toda la informacion de un item dada un ID",
+        responses={
+            404:{"description":"Recurso no encontrado"},
+        })
+def actualizarPorID(item_id: int, nuevo_item : itemBase) : 
+    for itemEncontrado in items2:
+        if itemEncontrado.id == item_id:
+            items2.remove(itemEncontrado)
+            nuevo = item(
+            id=item_id,
+            ganancia=nuevo_item.ganancia,
+            peso=nuevo_item.peso
+            )
+            items2.append(nuevo)
+            return items2
+    else:
+        raise HTTPException(status_code=404, detail="item no contrado")
+    
+@app.patch("/actItem/", 
+        response_description="devuelve la lista actualizada",
+        status_code=200,
+        tags=["Items"],
+        summary="Ruta para actualizar algunos campos de un item",
+        responses={
+            404:{"description":"Recurso no encontrado"},
+        })
+def actualizarItem(item_id: int, nuevo_item : itemUpdate) : 
+    for itemEncontrado in items2:
+        if itemEncontrado.id == item_id:
+            if nuevo_item.peso is not None:
+                itemEncontrado.peso = nuevo_item.peso 
+            else:
+                itemEncontrado.peso = itemEncontrado.peso 
+                
+            if nuevo_item.ganancia is not None:
+                itemEncontrado.ganancia = nuevo_item.ganancia
+            else:
+                itemEncontrado.ganancia = itemEncontrado.ganancia 
+            return items2
+    else:
+        raise HTTPException(status_code=404, detail="item no contrado")
+    
+    
 @app.delete("/itemsId/{item_id}", 
         response_description="devuelve la lista actualizada",
         status_code=200,
         tags=["Items"],
-        summary="Ruta para recuperar un solo item dado ID_item!!",
+        summary="Ruta para eliminar un solo item dado el ID!!",
         responses={
             404:{"description":"Recurso no encontrado"},
         })
