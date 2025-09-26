@@ -36,6 +36,11 @@ items2.append(item(id=2, ganancia=80.5, peso=20.3))
 
 
 idConteo = 2
+conteoGeneral = 2
+
+def actualizarConteo():
+    global idConteo
+    idConteo +=1 
 #principal de la API
 @app.get("/" ,response_description="descripcion de app",)
 def root():
@@ -64,12 +69,14 @@ def get_items():
             404:{"description":"Recurso no encontrado"},
         })
 def post_item( gananciaParametro: float, pesoParametro: float):
+    actualizarConteo()
     nuevoItem = item(
         id=idConteo, 
         ganancia=gananciaParametro, 
         peso=pesoParametro)
-    idConteo += 1 
+    
     items2.append(nuevoItem)
+
 
     return items2
 
@@ -84,12 +91,13 @@ def post_item( gananciaParametro: float, pesoParametro: float):
             
         })
 def post_items(nuevo_item: itemBase):
+    actualizarConteo()
     nuevo = item(
         id=idConteo,
         ganancia=nuevo_item.ganancia,
         peso=nuevo_item.peso
     )
-    idConteo +=1 
+
     items2.append(nuevo)
     return items2
 
