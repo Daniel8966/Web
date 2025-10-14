@@ -62,7 +62,17 @@ def get_items(session: Session = Depends(get_session)):
     return items
 
 #Ruta para insertar items JSON 
-@app.post("/items/")
+
+@app.post("/itemsPOST_Json", 
+        response_description="Devuelve la lista de items actualizada despues del ingreso obj JSON" \
+        "ingresados hasta el momento",
+        status_code=200,
+        tags=["Items"],
+        summary="Ruta para insertar un item con Objeto JSON!!",
+        responses={
+            404:{"description":"Recurso no encontrado"},
+            
+        })
 def crear_item(item: ItemCreate, session: SessionDep):
     db_item = Item.from_orm(item)
     session.add(db_item)
@@ -140,4 +150,26 @@ def actualizarItem(item_id: int, nuevo_item : ItemUpdate, session : SessionDep) 
         raise HTTPException(status_code=404, detail="item no contrado")
     
     return item_existente
-    
+
+
+@app.delete("/itemsId/{item_id}", 
+        response_description="devuelve la lista actualizada",
+        status_code=200,
+        tags=["Items"],
+        summary="Ruta para eliminar un solo item dado el ID!!",
+        responses={
+            404:{"description":"Recurso no encontrado"},
+        })
+def eliminarPorID(item_id: int, session: Session = Depends(get_session)):
+    # Buscar el item
+    statement = select(Item).where(Item.id == item_id)
+    item = session.exec(statement).first()
+
+    if not item:
+        raise HTTPException(status_code=404, detail="Item no encontrado")
+
+    # Eliminarlo
+    session.delete(item)
+    session.commit()
+
+    return {"mensaje": "Item con id "+str(item_id)+" eliminado correctamente"}
