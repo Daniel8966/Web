@@ -88,8 +88,6 @@ def get_item(item_id: int, session: SessionDep):
     return results
 
 #Item actualizar TODOOO el item (PUT) 
-
-
 @app.put("/itemsActualizar/{item_id}", 
         response_description="devuelve la lista actualizada",
         status_code=200,
@@ -98,7 +96,48 @@ def get_item(item_id: int, session: SessionDep):
         responses={
             404:{"description":"Recurso no encontrado"},
         })
-def actualizarPorID(item_id: int, nuevo_item : ItemBase) : 
+def actualizarPorID(item_id: int, nuevo_item: ItemBase, session: Session = Depends(get_session)):
+    # Buscar el item existente
+    statement = select(Item).where(Item.id == item_id)
+    item_existente = session.exec(statement).first()
+
+    if not item_existente:
+        raise HTTPException(status_code=404, detail="Item no encontrado")
+
+    # Actualizar los campos (solo los que cambian)
+    item_existente.ganancia = nuevo_item.ganancia
+    item_existente.peso = nuevo_item.peso
+
+    # Guardar cambios
+    #metodo de session.add para actualizar el item el id esta implicito
+    session.add(item_existente)
+    session.commit()
+    session.refresh(item_existente)
+
+    return item_existente
+
+@app.patch("/actItem/", 
+        response_description="devuelve la lista actualizada",
+        status_code=200,
+        tags=["Items"],
+        summary="Ruta para actualizar algunos campos de un item",
+        responses={
+            404:{"description":"Recurso no encontrado"},
+        })
+def actualizarItem(item_id: int, nuevo_item : ItemUpdate, session : SessionDep) : 
     
-    return "jaja nose" + str(item_id)
-   
+    statement = select(Item).where(Item.id == item_id)
+    item_existente = session.exec(statement).first()
+
+    if item_existente :
+        if nuevo_item.peso: item_existente.peso = nuevo_item.peso
+        if nuevo_item.peso: item_existente.ganancia = nuevo_item.ganancia
+        session.add(item_existente)
+        session.commit()
+        session.refresh(item_existente)
+
+    else:
+        raise HTTPException(status_code=404, detail="item no contrado")
+    
+    return item_existente
+    
