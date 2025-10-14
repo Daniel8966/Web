@@ -1,0 +1,37 @@
+#voy a tomar nota acerca de la clase en esta parte
+
+from fastapi import FastAPI, BaseMODEL 
+from sqlmodel import SQLModel 
+
+#ORM SQLAlchemy 
+#trabajar con las entidades como modelos clases en el backend
+
+#pip install sqlmodel
+
+class ItemBase(SQLModel):
+    ganancia:float
+    peso:float
+
+class itemCreate(ItemBas):
+    pass
+
+class Item(ItemBase , table = True):
+    id : int 
+
+sql_url = "sqlite:///database.db"
+engine = create_engine(sql_url)
+
+#Permirtir ceracion de todas las tablas generadas por table = true (mapear)
+def create_db_and_tables():
+    SQLModel.metadata.create_all(engine)
+
+#obtener sesion por clientes
+def get_sesion():
+    with Session(engine) as session: 
+        yield session 
+
+#induccion de dependencias 
+
+#inyectar dependencias hacia la variable para que cada ves que sea invocado el codigo se ejecute 
+SessionDep = Annotated[Session, Depends(get_session)]
+
