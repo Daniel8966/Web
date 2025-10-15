@@ -29,10 +29,6 @@ class ItemBase(SQLModel):
 class Item(ItemBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     
-# class Item(SQLModel, table=True):
-#     id: int | None = Field(default=None, primary_key=True)
-#     nombre: str
-#     descripcion: str | None = None
 
 class ItemCreate(ItemBase):
     pass
@@ -141,7 +137,7 @@ def actualizarItem(item_id: int, nuevo_item : ItemUpdate, session : SessionDep) 
 
     if item_existente :
         if nuevo_item.peso: item_existente.peso = nuevo_item.peso
-        if nuevo_item.peso: item_existente.ganancia = nuevo_item.ganancia
+        if nuevo_item.ganancia: item_existente.ganancia = nuevo_item.ganancia
         session.add(item_existente)
         session.commit()
         session.refresh(item_existente)
