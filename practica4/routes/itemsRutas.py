@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends
-from models.ItemModel import *
+from fastapi import APIRouter
+from models.EtiquetasModel import Item, Etiqueta
 from schemas.ItemSchema import ItemCreate, ItemUpdate, ItemBase, ItemRead
+from schemas.EitquetaSchema import EtiquetaBase, EtiquetaCreate, EtiquetaRead
 from database.SessionDep import SessionDep  # tu dependencia para obtener la sesión
 from fastapi import HTTPException
 from sqlmodel import  select
@@ -20,11 +21,25 @@ router = APIRouter(
     responses={404: {"description": "Recurso no encontrado"}},
 )
 def crear_item(item: ItemCreate, session: SessionDep):
-    db_item = Item.from_orm(item)
+
+    db_item = Item(
+        ganancia=item.ganancia,
+        peso=item.peso,
+        envio_final=item.envio_final
+    )
+
+    if item.etiquetas_ids:
+        etiquetas = session.query(Etiqueta).filter(Etiqueta.id.in_(item.etiquetas_ids)).all() # type: ignore
+        if not etiquetas:
+            raise HTTPException(status_code=404, detail="Algunas etiquetas no existen")
+        db_item.etiquetas = etiquetas
+
+
     session.add(db_item)
     session.commit()
     session.refresh(db_item)
-    return db_item
+
+    return ItemRead.from_orm(db_item)
 
 
 
@@ -35,7 +50,6 @@ def get_items(session: SessionDep):
     results = session.exec(statement)
     items = results.all()
     return items
-
 
 
 #Recuperar un solo item por id
@@ -64,21 +78,24 @@ def get_item(item_id: int, session: SessionDep):
         responses={
             404:{"description":"Recurso no encontrado"},
         })
-def actualizarPorID(item_id: int, nuevo_item: ItemBase, session: SessionDep):
-    # Buscar el item existente
+def actualizarPorID(item_id: int, nuevo_item: ItemUpdate, session: SessionDep):
+
     statement = select(Item).where(Item.id == item_id)
     item_existente = session.exec(statement).first()
 
     if not item_existente:
         raise HTTPException(status_code=404, detail="Item no encontrado")
 
-    # Actualizar los campos (solo los que cambian)
-    item_existente.ganancia = nuevo_item.ganancia
-    item_existente.peso = nuevo_item.peso
+    if nuevo_item.ganancia is not None:
+        item_existente.ganancia = nuevo_item.ganancia
+    if nuevo_item.peso is not None:
+        item_existente.peso = nuevo_item.peso
+    if nuevo_item.envio_final is not None:
+        item_existente.envio_final = nuevo_item.envio_final
 
-    # Guardar cambios
-    #metodo de session.add para actualizar el item el id esta implicito
-    session.add(item_existente)
+    if nuevo_item.etiquetas_ids is not None:
+        etiquetas = session.query(Etiqueta).filter(Etiqueta.id.in_(nuevo_item.etiquetas_ids)).all() # type: ignore
+        item_existente.etiquetas = etiquetas
     session.commit()
     session.refresh(item_existente)
 
@@ -97,16 +114,22 @@ def actualizarItem(item_id: int, nuevo_item : ItemUpdate, session : SessionDep) 
     statement = select(Item).where(Item.id == item_id)
     item_existente = session.exec(statement).first()
 
-    if item_existente :
-        if nuevo_item.peso!= None: item_existente.peso = nuevo_item.peso
-        if nuevo_item.ganancia != None: item_existente.ganancia = nuevo_item.ganancia
-        session.add(item_existente)
-        session.commit()
-        session.refresh(item_existente)
+    if not item_existente:
+        raise HTTPException(status_code=404, detail="Item no encontrado")
 
-    else:
-        raise HTTPException(status_code=404, detail="item no contrado")
-    
+    if nuevo_item.ganancia is not None:
+        item_existente.ganancia = nuevo_item.ganancia
+    if nuevo_item.peso is not None:
+        item_existente.peso = nuevo_item.peso
+    if nuevo_item.envio_final is not None:
+        item_existente.envio_final = nuevo_item.envio_final
+
+    if nuevo_item.etiquetas_ids is not None:
+        etiquetas = session.query(Etiqueta).filter(Etiqueta.id.in_(nuevo_item.etiquetas_ids)).all() # type: ignore
+        item_existente.etiquetas = etiquetas
+    session.commit()
+    session.refresh(item_existente)
+
     return item_existente
 
 

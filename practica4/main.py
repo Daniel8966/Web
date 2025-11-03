@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from database.SessionDep import create_db_and_tables 
-from routes import itemsRutas
+from routes import itemsRutas, EtiquetasRutas
 
 app = FastAPI(title="Mi API modular")
 
@@ -11,6 +11,7 @@ def on_startup():
 
 # Incluir las rutas
 app.include_router(itemsRutas.router)
+app.include_router(EtiquetasRutas.router)
 
 @app.get("/")
 def home():

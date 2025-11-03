@@ -1,6 +1,7 @@
 from typing import Annotated
 from fastapi import Depends
 from sqlmodel import SQLModel, Session, create_engine
+from models.EtiquetasModel import *
 
 
 sql_url = "sqlite:///database.db"
@@ -8,7 +9,6 @@ engine = create_engine(sql_url, echo=True)
 
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
-
 
 
 def get_session():

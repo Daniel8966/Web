@@ -1,28 +1,29 @@
-#Esquemas son utilizados para el manejo de la API 
 from pydantic import BaseModel
-from typing import  Optional
+from typing import Optional, List
+from schemas.EitquetaSchema import EtiquetaRead  # esquema de respuesta de etiquetas
 
+# ----------------- ITEM BASE -----------------
 class ItemBase(BaseModel):
     ganancia: float
     peso: float
-    
-# Datos que el cliente envía al crear un item
-class ItemCreate(BaseModel):
-    ganancia: float
-    peso: float
+    envio_final: Optional[str] = None 
 
-# Datos que el cliente puede actualizar parcialmente
+
+class ItemCreate(ItemBase):
+
+    etiquetas_ids: Optional[List[int]] = []
+
+
 class ItemUpdate(BaseModel):
     ganancia: Optional[float] = None
     peso: Optional[float] = None
+    envio_final: Optional[str] = None
+    etiquetas_ids: Optional[List[int]] = []
 
-# Datos que la API devuelve al cliente
-class ItemRead(BaseModel):
+
+class ItemRead(ItemBase):
     id: int
-    ganancia: float
-    peso: float
+    etiquetas: List[EtiquetaRead] = []  # aquí se devuelven las etiquetas relacionadas
 
     class Config:
-        orm_mode = True  # permite devolver objetos SQLModel/SQLAlchemy directamente
-
-
+        from_attributes = True  
