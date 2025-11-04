@@ -1,7 +1,7 @@
 
 
 import random
-from interfazGenetico import interfazGenetico
+from practica1.interfazGenetico import interfazGenetico
 
 class AlgoritmoGenetico(interfazGenetico):
 
@@ -28,7 +28,7 @@ class AlgoritmoGenetico(interfazGenetico):
         for i in range(n):
             volumen = 0 
             utilidad = 0
-            for j in range(cantidadObjetos): 
+            for j in range(len(objetosVolumenValor)): 
                 if poblacion[i][j] == 1 :
                     volumen+= objetosVolumenValor[j][0]
                     utilidad += objetosVolumenValor[j][1]

@@ -1,6 +1,6 @@
 #Esta parte iria en el main del codigo basicamente 
-from genetico import AlgoritmoGenetico
-from geneticoModificable import AlgoritmoGeneticoModificado
+from practica1.genetico import AlgoritmoGenetico
+from practica1.geneticoModificable import AlgoritmoGeneticoModificado
 
 """
 #necesitamos 4 entradas volumen total del camion, n cantidad de inidividuos, m generaciones 
@@ -9,15 +9,13 @@ Arreglo que contenga volumen y valor de cada objeto
 """
 
 #Arreglo de los objetos con su volumen y su valor
-objetosVolumenValor =((1,2),(2,2),(6,3),(1,5),(8,1),(2,7)) 
-
 
 #encontrar la cantidad de objeto para gnerar los slots de cada individuo [1|0|1|0|1|1...n] 
 
 def resolver_algoritmo_genetico(n_Generaciones, n_Individuos, capacidad_Carga, items, porCentajeCruza, porcentajeMutacion):
 
     #Mismos metodos de la interfaz de algoritmo con diferentes comportamientos diferentes objetos
-    cantidadObjetos = len(objetosVolumenValor)
+    cantidadObjetos = len(items)
 
     #el original es poblacionzila
     poblacionzila =  AlgoritmoGenetico()
@@ -30,10 +28,7 @@ def resolver_algoritmo_genetico(n_Generaciones, n_Individuos, capacidad_Carga, i
         individuosMutados = poblacionzila.mutacion(cantidadObjetos,nuevaGeneracion,n_Individuos,porcentajeMutacion)
         poblacion = individuosMutados
 
-    indice, aptitudFinal = poblacionzila.encontrar_mejor_individuo(individuosMutados,n_Individuos,cantidadObjetos,objetosVolumenValor,capacidad_Carga)
+    indice, aptitudFinal = poblacionzila.encontrar_mejor_individuo(individuosMutados,n_Individuos,cantidadObjetos,items,capacidad_Carga)
 
 
     return individuosMutados[indice] , aptitudFinal
-
-individuosSolucion, _  = resolver_algoritmo_genetico(200, 50, 15, objetosVolumenValor, .9, .01)
-print(individuosSolucion)

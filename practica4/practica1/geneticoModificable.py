@@ -1,7 +1,7 @@
 import array
 
 import random
-from interfazGenetico import interfazGenetico
+from practica1.interfazGenetico import interfazGenetico
 
 class AlgoritmoGeneticoModificado(interfazGenetico):
      
