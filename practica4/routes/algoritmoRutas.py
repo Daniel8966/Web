@@ -1,6 +1,5 @@
 from fastapi import APIRouter
-from models.EtiquetasModel import Etiqueta
-from models.ItemModel import Item
+from models.EtiquetasModel import Etiqueta, Item
 from schemas.EitquetaSchema import EtiquetaBase, EtiquetaCreate, EtiquetaRead
 from schemas.ItemSchema import ItemBase
 from database.SessionDep import SessionDep  # tu dependencia para obtener la sesión
@@ -26,20 +25,18 @@ def usarAlgoritmoGenetico(session: SessionDep, items : list[int]):
     
 
     objetosVolumenValor1 = [] 
-    for i in items:
-        statement = select(Item).where(Item.id == items[i])
-        results = session.exec(statement).all()
-        objetosVolumenValor1.append(results)
-        if not results:
-            raise HTTPException(status_code=404, detail="Item no encontrado")
-        
-    
-        print(objetosVolumenValor1)
+    # for i in items:
+    #     statement = select(Item).where(Item.id == items[i])
+    #     results = session.exec(statement).all()
+    #     objetosVolumenValor1.append(results)
+    #     if not results:
+    #         raise HTTPException(status_code=404, detail="Item no encontrado")
+    #     print(objetosVolumenValor1[i])
     
     
-    objetosVolumenValor =((1,2),(2,2),(6,3))
+    objetosVolumenValor =((1,2),(2,2),(6,3),(1,2),(2,2),(6,3),(1,2),(2,2),(6,3),(1,2),(2,2),(6,3),(1,2),(2,2),(6,3),(1,2),(2,2),(6,3),(1,2),(2,2),(6,3),(1,2),(2,2),(6,3),(1,2),(2,2),(6,3))
     
     individuosSolucion, _  = resolver_algoritmo_genetico(200, 50, 15, objetosVolumenValor, .9, .01)
-    print(individuosSolucion)
+    print('el length del arreglo es: ' , ~len(objetosVolumenValor))
 
-    return individuosSolucion
+    return individuosSolucion, len(individuosSolucion)

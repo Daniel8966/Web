@@ -12,13 +12,19 @@ class ItemEtiquetaLink(SQLModel, table=True):
     etiqueta_id: Optional[int] = Field(default=None, foreign_key="etiqueta.id", primary_key=True)
 
 
+class Envio(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    descripcion: str
+    items: List["Item"] = Relationship(back_populates="envio_final")
+
+
 # Tabla principal: ITEM
 class Item(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     peso: float
     ganancia: float
-    envio_final: Optional[str] = None  # ejemplo de campo adicional
-
+    envio_final_id: Optional[int] = Field(default=None, foreign_key="envio.id")
+    envio_final : Optional['Envio'] = Relationship(back_populates="items")
     etiquetas: List["Etiqueta"] = Relationship(back_populates="items", link_model=ItemEtiquetaLink)
 
 
@@ -27,9 +33,3 @@ class Etiqueta(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     descripcion: str
     items: List[Item] = Relationship(back_populates="etiquetas", link_model=ItemEtiquetaLink)
-
-#tabla de envios 
-class Envio(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    descripcion: str
-

@@ -5,9 +5,9 @@ from sqlmodel import SQLModel, Field
 
 # ITEM: idItem , peso, ganancia, categorias (etiquetas), EnvioFInal|=Null 
 
-class Item(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+# class Item(SQLModel, table=True):
+#     id: Optional[int] = Field(default=None, primary_key=True)
 
-    ganancia: float
-    peso: float
+#     ganancia: float
+#     peso: float
 
