@@ -25,7 +25,7 @@ def crear_item(item: ItemCreate, session: SessionDep):
     db_item = Item(
         ganancia=item.ganancia,
         peso=item.peso,
-        envio_final=item.envio_final
+
     )
 
     if item.etiquetas_ids:
@@ -53,7 +53,7 @@ def get_items(session: SessionDep):
 
 
 #Recuperar un solo item por id
-@router.get("/itemsId/{item_id}", 
+@router.get("/itemsId/{item_id}", response_model=ItemRead,
         response_description="Devuelve un solo item del {item_id}",
         status_code=200,
         tags=["Items"],
@@ -63,14 +63,14 @@ def get_items(session: SessionDep):
         })
 def get_item(item_id: int, session: SessionDep):
     statement = select(Item).where(Item.id == item_id)
-    results = session.exec(statement).all()
+    results = session.exec(statement).first()
     if not results:
         raise HTTPException(status_code=404, detail="Item no encontrado")
     
     return results
 
 #Item actualizar TODOOO el item (PUT) 
-@router.put("/itemsActualizar/{item_id}", 
+@router.put("/itemsActualizar/{item_id}", response_model=ItemRead,
         response_description="devuelve la lista actualizada",
         status_code=200,
         tags=["Items"],
@@ -83,6 +83,7 @@ def actualizarPorID(item_id: int, nuevo_item: ItemUpdate, session: SessionDep):
     statement = select(Item).where(Item.id == item_id)
     item_existente = session.exec(statement).first()
 
+
     if not item_existente:
         raise HTTPException(status_code=404, detail="Item no encontrado")
 
@@ -90,8 +91,7 @@ def actualizarPorID(item_id: int, nuevo_item: ItemUpdate, session: SessionDep):
         item_existente.ganancia = nuevo_item.ganancia
     if nuevo_item.peso is not None:
         item_existente.peso = nuevo_item.peso
-    if nuevo_item.envio_final is not None:
-        item_existente.envio_final = nuevo_item.envio_final
+
 
     if nuevo_item.etiquetas_ids is not None:
         etiquetas = session.query(Etiqueta).filter(Etiqueta.id.in_(nuevo_item.etiquetas_ids)).all() # type: ignore
@@ -101,7 +101,7 @@ def actualizarPorID(item_id: int, nuevo_item: ItemUpdate, session: SessionDep):
 
     return item_existente
 
-@router.patch("/actItem/", 
+@router.patch("/actItem/", response_model=ItemRead,
         response_description="devuelve la lista actualizada",
         status_code=200,
         tags=["Items"],
@@ -109,8 +109,8 @@ def actualizarPorID(item_id: int, nuevo_item: ItemUpdate, session: SessionDep):
         responses={
             404:{"description":"Recurso no encontrado"},
         })
-def actualizarItem(item_id: int, nuevo_item : ItemUpdate, session : SessionDep) : 
-    
+def actualizarItem(item_id: int, nuevo_item: ItemUpdate, session: SessionDep):
+
     statement = select(Item).where(Item.id == item_id)
     item_existente = session.exec(statement).first()
 
@@ -121,17 +121,20 @@ def actualizarItem(item_id: int, nuevo_item : ItemUpdate, session : SessionDep) 
         item_existente.ganancia = nuevo_item.ganancia
     if nuevo_item.peso is not None:
         item_existente.peso = nuevo_item.peso
-    if nuevo_item.envio_final is not None:
-        item_existente.envio_final = nuevo_item.envio_final
 
-    if nuevo_item.etiquetas_ids is not None:
-        etiquetas = session.query(Etiqueta).filter(Etiqueta.id.in_(nuevo_item.etiquetas_ids)).all() # type: ignore
+    if nuevo_item.etiquetas_ids:
+        etiquetas = session.query(Etiqueta).filter(
+            Etiqueta.id.in_(nuevo_item.etiquetas_ids) # type: ignore
+        ).all()
+
+        if len(etiquetas) != len(nuevo_item.etiquetas_ids):
+            raise HTTPException(status_code=404, detail="Algunas etiquetas no existen")
+
         item_existente.etiquetas = etiquetas
+
     session.commit()
     session.refresh(item_existente)
-
     return item_existente
-
 
 @router.delete("/itemsId/{item_id}", 
         response_description="devuelve la lista actualizada",
