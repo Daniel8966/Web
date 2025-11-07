@@ -15,7 +15,7 @@ ESTRUCTURA
 
 practica4/
 │
-├── practica1               # Recupera el algoritmo Genetico de la practica 1 
+├── practica1              # Recupera el algoritmo Genetico de la practica 1 
 ├── main.py                # Punto de entrada (inicia FastAPI)
 ├── models                 # Modelos de la base de datos
 ├── schemas                # Pydantic models (ItemCreate, etc.)

@@ -21,7 +21,7 @@ router = APIRouter(
     responses={404: {"description": "Recurso no encontrado"}},
 )
 
-def usarAlgoritmoGenetico(session: SessionDep, capacidadCarga : int , generaciones: int, individuos: int, porcentajeCruza: int, porcentajeMutacion: int , descripcion_envio: str ):
+def usarAlgoritmoGenetico(session: SessionDep, capacidadCarga : int , generaciones: int, individuos: int, porcentajeCruza: float , porcentajeMutacion: float , descripcion_envio: str ):
     #Arreglo de los objetos con su volumen y su valor
     
     statement = (select(Item).where(Item.envio_final_id == None))
