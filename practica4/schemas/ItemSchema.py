@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional, List
 from schemas.EitquetaSchema import EtiquetaRead  # esquema de respuesta de etiquetas
+from schemas.Envio import EnvioRead
 
 # ----------------- ITEM BASE -----------------
 class ItemBase(BaseModel):
@@ -21,6 +22,8 @@ class ItemUpdate(BaseModel):
 class ItemRead(ItemBase):
     id: int
     etiquetas: List[EtiquetaRead] = []  # aquí se devuelven las etiquetas relacionadas
-    envio_final: Optional[str] = None 
+    envio_final: Optional[EnvioRead] = None 
     class Config:
         from_attributes = True  
+
+

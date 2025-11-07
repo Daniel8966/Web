@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from models.EtiquetasModel import Etiqueta, Item
+from models.EtiquetasModel import Etiqueta, Item, Envio
 from schemas.EitquetaSchema import EtiquetaBase, EtiquetaCreate, EtiquetaRead
 from schemas.ItemSchema import ItemBase
 from database.SessionDep import SessionDep  # tu dependencia para obtener la sesión
@@ -20,7 +20,8 @@ router = APIRouter(
     summary="Ruta para escojer los mejores objetos a transportar",
     responses={404: {"description": "Recurso no encontrado"}},
 )
-def usarAlgoritmoGenetico(session: SessionDep, capacidadCarga : int , generaciones: int, individuos: int, porcentajeCruza: int, porcentajeMutacion: int ):
+
+def usarAlgoritmoGenetico(session: SessionDep, capacidadCarga : int , generaciones: int, individuos: int, porcentajeCruza: int, porcentajeMutacion: int , descripcion_envio: str ):
     #Arreglo de los objetos con su volumen y su valor
     
     statement = (select(Item).where(Item.envio_final_id == None))
@@ -36,8 +37,10 @@ def usarAlgoritmoGenetico(session: SessionDep, capacidadCarga : int , generacion
     for i in range(len(result)):
         objetosVolumenValor1.append((result[i].peso, result[i].ganancia , result[i].id))
 
+    if len(objetosVolumenValor1) < 3 : 
+         return "ingrese mas elementos para ser enviados"
+         
     individuosSolucion, aptitudFinal  = resolver_algoritmo_genetico(generaciones, individuos, capacidadCarga, objetosVolumenValor1, porcentajeCruza, porcentajeMutacion)
-
     respuestaFianl = []
     i = 0 
     peso = 0
@@ -47,7 +50,26 @@ def usarAlgoritmoGenetico(session: SessionDep, capacidadCarga : int , generacion
             peso+= result[i].peso
         i += 1 
 
-    return  respuestaFianl, f"peso total : {peso}  y una ganancia de : {aptitudFinal} "
+    nuevo_envio = Envio(descripcion=descripcion_envio)
+    session.add(nuevo_envio)
+    session.commit()
+    session.refresh(nuevo_envio)  # Para obtener el ID generado
+
+    for item in respuestaFianl:
+        item.envio_final_id = nuevo_envio.id
+        item.envio_final = nuevo_envio
+        session.add(item)
+
+    session.commit()
+
+    return {
+        "envio_id": nuevo_envio.id,
+        "descripcion": nuevo_envio.descripcion,
+        "peso_total": peso,
+        "ganancia_total": aptitudFinal,
+        "items_asignados": [item.id for item in respuestaFianl]
+    }
+
 
  
 
@@ -58,7 +80,7 @@ def usarAlgoritmoGenetico(session: SessionDep, capacidadCarga : int , generacion
     summary="Ruta para escojer los mejores objetos a transportar de manera automatica 200 gen 50 individuos .9 cruza .01mutacion ",
     responses={404: {"description": "Recurso no encontrado"}}, 
 )
-def usarAlgoritmoGeneticoAutomatico(session: SessionDep, capacidadCarga: int ):
+def usarAlgoritmoGeneticoAutomatico(session: SessionDep, capacidadCarga: int ,descripcion_envio: str):
     #Arreglo de los objetos con su volumen y su valor
     
     statement = (select(Item).where(Item.envio_final_id == None))
@@ -74,6 +96,9 @@ def usarAlgoritmoGeneticoAutomatico(session: SessionDep, capacidadCarga: int ):
     for i in range(len(result)):
         objetosVolumenValor1.append((result[i].peso, result[i].ganancia , result[i].id))
 
+    if len(objetosVolumenValor1) < 3 : 
+         return "ingrese mas elementos para ser enviados"
+         
     individuosSolucion, aptitudFinal  = resolver_algoritmo_genetico(200, 50, capacidadCarga, objetosVolumenValor1, .9, .01)
 
     respuestaFianl = []
@@ -85,6 +110,23 @@ def usarAlgoritmoGeneticoAutomatico(session: SessionDep, capacidadCarga: int ):
             peso+= result[i].peso
         i += 1 
 
-    return  respuestaFianl, f"peso total : {peso}  y una ganancia de : {aptitudFinal} "
+    nuevo_envio = Envio(descripcion=descripcion_envio)
+    session.add(nuevo_envio)
+    session.commit()
+    session.refresh(nuevo_envio)  # Para obtener el ID generado
 
- 
+    for item in respuestaFianl:
+        item.envio_final_id = nuevo_envio.id
+        item.envio_final = nuevo_envio
+        session.add(item)
+
+    session.commit()
+
+    return {
+        "envio_id": nuevo_envio.id,
+        "descripcion": nuevo_envio.descripcion,
+        "peso_total": peso,
+        "ganancia_total": aptitudFinal,
+        "items_asignados": [item.id for item in respuestaFianl]
+    }
+
