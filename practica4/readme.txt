@@ -15,9 +15,9 @@ ESTRUCTURA
 
 practica4/
 │
+├── practica1              # Recupera el algoritmo Genetico de la practica 1 
 ├── main.py                # Punto de entrada (inicia FastAPI)
-├── models.py              # Modelos de la base de datos
-├── schemas.py             # Pydantic models (ItemCreate, etc.)
-├── database.py            # Configuración de la base de datos
-└── routes/
-    └── items.py           # Aquí guardas tus rutas relacionadas con items
+├── models                 # Modelos de la base de datos
+├── schemas                # Pydantic models (ItemCreate, etc.)
+├── database               # Configuración de la base de datos
+└── routes                 # Routeo para cada endpoint de la app
