@@ -5,6 +5,7 @@ from database.SessionDep import engine
 from models.modelos import Libro
 from models.modelos import Libro
 from schemas.librosEschema import LibroCreate, LibroRead
+from rutas import LibrosRutas, AutoresRutas, EditorialesRutas, PublicosObjetivoRutas, SeriesRutas, CategoriasRutas
 
 app = FastAPI()
 #Crear tablas al iniciar
@@ -13,25 +14,13 @@ def on_startup():
     create_db_and_tables()
 
 
+@app.get("/")
+def home():
+    return {"message": "Practica 5 definitivamente no entregue esto tarde consulte /docs"}
 
-def get_session():
-    with Session(engine) as session:
-        yield session
-
-
-@app.post("/libros/", response_model=LibroRead)
-def crear_libro(libro: LibroCreate, session: Session = Depends(get_session)):
-    nuevo_libro = Libro.from_orm(libro)
-    session.add(nuevo_libro)
-    session.commit()
-    session.refresh(nuevo_libro)
-    return nuevo_libro
-
-
-@app.get("/libros/", response_model=list[LibroRead])
-def listar_libros(session: Session = Depends(get_session)):
-    libros = session.exec(select(Libro)).all()
-    
-    if libros:
-        return libros
-    return "no se an registrado libros aun"
+app.include_router(LibrosRutas.router)
+app.include_router(AutoresRutas.router)
+app.include_router(EditorialesRutas.router)
+app.include_router(PublicosObjetivoRutas.router)
+app.include_router(SeriesRutas.router)
+app.include_router(CategoriasRutas.router)

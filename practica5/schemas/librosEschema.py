@@ -68,9 +68,20 @@ class LibroBase(BaseModel):
 
 # Al crear un libro: se permiten solo los IDs de relaciones
 # y listas de IDs para autores y categorías
-class LibroCreate(LibroBase):
+
+class LibroCreate(BaseModel):
+    isbn: str
+    titulo: str
+    ano_publicacion: str
+    paginas: int
+    precio: float
+    formato: bool
+    editorial_id: Optional[int]
+    publico_objetivo_id: Optional[int]
+    serie_id: Optional[int]
     autores_ids: Optional[List[int]] = []
     categorias_ids: Optional[List[int]] = []
+
 
 
 #  Al leer un libro: se devuelven objetos anidados (relaciones)
@@ -84,3 +95,17 @@ class LibroRead(LibroBase):
 
     class Config:
         orm_mode = True
+
+
+class LibroUpdate(BaseModel):
+    isbn: Optional[str] = None
+    titulo: Optional[str] = None
+    ano_publicacion: Optional[str] = None
+    paginas: Optional[int] = None
+    precio: Optional[float] = None
+    formato: Optional[bool] = None
+    editorial_id: Optional[int] = None
+    publico_objetivo_id: Optional[int] = None
+    serie_id: Optional[int] = None
+    autores_ids: Optional[List[int]] = None
+    categorias_ids: Optional[List[int]] = None
