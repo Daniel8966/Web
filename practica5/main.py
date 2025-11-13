@@ -5,7 +5,7 @@ from database.SessionDep import engine
 from models.modelos import Libro
 from models.modelos import Libro
 from schemas.librosEschema import LibroCreate, LibroRead
-from rutas import LibrosRutas, AutoresRutas, EditorialesRutas, PublicosObjetivoRutas, SeriesRutas, CategoriasRutas
+from rutas import LibrosRutas, AutoresRutas, EditorialesRutas, PublicosObjetivoRutas, SeriesRutas, CategoriasRutas, busquedaLibros
 
 app = FastAPI()
 #Crear tablas al iniciar
@@ -17,6 +17,8 @@ def on_startup():
 @app.get("/")
 def home():
     return {"message": "Practica 5 definitivamente no entregue esto tarde consulte /docs"}
+
+app.include_router(busquedaLibros.router)
 
 app.include_router(LibrosRutas.router)
 app.include_router(AutoresRutas.router)
