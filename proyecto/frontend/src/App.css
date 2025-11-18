@@ -1,0 +1,57 @@
+.containerGrande {
+
+  display: grid;
+  place-items: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* centra vertical */
+  align-items: center;      /* centra horizontal */
+  height: 100vh;            /* ocupa toda la pantalla */
+
+}
+
+
+.formulario {
+  margin-bottom: 20px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 1px solid #683a3a;
+  border-radius: 4px;
+}
+
+.btn {
+  width: 100%;
+  padding: 10px;
+  background: #007bff;
+  border: none;
+  color: rgb(29, 8, 8);
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn:hover {
+  background: #005fcc;
+}
+
+.lista {
+  list-style-type: none;
+  padding: 0;
+}
+
+.item {
+  padding: 8px;
+  background: #662f2f;
+  border: 1px solid #b40b0b;
+  margin-bottom: 6px;
+  border-radius: 4px;
+  text-align: left;
+}
