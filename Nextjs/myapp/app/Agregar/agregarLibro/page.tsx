@@ -18,7 +18,10 @@ export default function AgregarLibro() {
   const [publicos, setPublicos] = useState([]);
   const [series, setSeries] = useState([]);
   const [categorias, setCategorias] = useState([]);
+  const [autorIds, setAutorIds] = useState([]);
+  const [categoriaIds, setCategoriaIds] = useState([]);
 
+  
   // Selected ids
   const [autorId, setAutorId] = useState("");
   const [editorialId, setEditorialId] = useState("");
@@ -28,6 +31,7 @@ export default function AgregarLibro() {
 
   const [mensaje, setMensaje] = useState(null);
   const [cargando, setCargando] = useState(false);
+
 
   useEffect(() => {
     const loadData = async () => {
@@ -75,12 +79,12 @@ const payload = {
   precio: Number(precio),
   formato: Boolean(formato),
 
-  editorial_id: Number(editorialId),
-  publico_objetivo_id: Number(publicoId),
-  serie_id: Number(serieId),
+  editorial_id: editorialId ? Number(editorialId) : null,
+  publico_objetivo_id: publicoId ? Number(publicoId) : null,
+  serie_id: serieId ? Number(serieId) : null,
 
-  autores: autorId ? [{ id: Number(autorId) }] : [],
-  categorias: categoriaId ? [{ id: Number(categoriaId) }] : [],
+  autores_ids: autorIds,          
+  categorias_ids: categoriaIds  
 };
     try {
       setCargando(true);
@@ -191,10 +195,17 @@ const payload = {
               <span className="font-semibold">Formato (true = físico, false = digital)</span>
             </label>
 
-            {/* Selects */}
-            <select className="p-3 bg-slate-600 rounded" value={autorId} onChange={(e) => setAutorId(e.target.value)}>
-              <option value="">Seleccione Autor</option>
-              {autores.map((a) => (
+            <select
+              
+              className="p-3 bg-slate-600 rounded"
+              value={autorIds}
+              onChange={(e) =>
+                setAutorIds(
+                  Array.from(e.target.selectedOptions, o => Number(o.value))
+                )
+              }
+            >
+              {autores.map(a => (
                 <option key={a.id} value={a.id}>{a.nombre}</option>
               ))}
             </select>
@@ -220,12 +231,20 @@ const payload = {
               ))}
             </select>
 
-            <select className="p-3 bg-slate-600 rounded" value={categoriaId} onChange={(e) => setCategoriaId(e.target.value)}>
-              <option value="">Seleccione Categoría</option>
-              {categorias.map((c) => (
-                <option key={c.id} value={c.id}>{c.descripcion}</option>
-              ))}
-            </select>
+              <select
+            
+                className="p-3 bg-slate-600 rounded"
+                value={categoriaIds}
+                onChange={(e) =>
+                  setCategoriaIds(
+                    Array.from(e.target.selectedOptions, o => Number(o.value))
+                  )
+                }
+              >
+                {categorias.map(c => (
+                  <option key={c.id} value={c.id}>{c.descripcion}</option>
+                ))}
+              </select>
 
             <button
               type="submit"

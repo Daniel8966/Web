@@ -6,6 +6,8 @@ from models.modelos import Libro
 from models.modelos import Libro
 from schemas.librosEschema import LibroCreate, LibroRead
 from rutas import LibrosRutas, AutoresRutas, EditorialesRutas, PublicosObjetivoRutas, SeriesRutas, CategoriasRutas, busquedaLibros
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI()
 #Crear tablas al iniciar
@@ -13,6 +15,18 @@ app = FastAPI()
 def on_startup():
     create_db_and_tables()
 
+origins = [
+    "http://localhost:3000",  # React (Vite o CRA)
+    "http://127.0.0.1:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,      # o ["*"] para desarrollo
+    allow_credentials=True,
+    allow_methods=["*"],        # GET, POST, PUT, DELETE, etc
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def home():
