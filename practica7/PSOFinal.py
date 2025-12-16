@@ -203,9 +203,24 @@ def algoritmoParticulas(n_particulas, generaciones, w , c_1, c_2, penalizacionPa
     # print("particula solucion ===>>" , solucionProblema)
     # print("evaluacion solucion ===>> " , evaluacionSolucion)
     
+    # solucionPropuesta = [
+    # 6.3199877518358765,
+    # 2.340939545657601,
+    # 0.6539227221215453,
+    # 0.6330718015196382,
+    # 5.980317769638103,
+    # 5.542807434029478,
+    # 1.0459746331736008,
+    # 0.4141390043049706
+    # ]
+    # evaluacionSolucion = funcionObjetivo(solucionPropuesta)
+    # print("evaluacion solucion propuesta propia ===>> " , evaluacionSolucion)
+
+    
     return mejorParticula, evaluacionMejorParticula, historial
 
 
+mejorParticula, evaluacion , historial= algoritmoParticulas(1000, 200, .4, 1.5,  1.4, 1000)
 
 
 

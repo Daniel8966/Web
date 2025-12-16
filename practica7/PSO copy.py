@@ -205,6 +205,13 @@ print("con evalucacion objetivo : ->>" , evaluacionMejorParticula )
 print("con evalucacion penalizada : ->>" , nuevasEvaluaciones[indice] )
 
 
+solucionProblema =  [6.4747,2.234,0.6671,0.5957,5.9310,5.5271,1.0108,0.4004]
+evaluacionSolucion = funcionObjetivo(solucionProblema)
+print("particula solucion ===>>" , solucionProblema)
+print("evaluacion solucion ===>> " , evaluacionSolucion)
+    
+
+
 
 
 

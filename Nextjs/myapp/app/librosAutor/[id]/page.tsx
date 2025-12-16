@@ -50,7 +50,7 @@ export default function LibrosPorAutor() {
     <div className="bg-slate-900 min-h-screen text-white p-10">
           <BotonRegresar />
       <h1 className="text-3xl font-bold mb-6">
-        Libros del Autor #{id}
+        Libros del Autor #{id}, 
       </h1>
 
       {libros.length === 0 ? (
@@ -65,6 +65,8 @@ export default function LibrosPorAutor() {
               <h2 className="text-xl font-bold">{libro.titulo}</h2>
               <p className="opacity-80">ISBN: {libro.isbn}</p>
               <p className="opacity-80">Año: {libro.ano_publicacion}</p>
+              <p><strong>Autores:</strong> {libro.autores.map(a => a.nombre).join(", ")}</p>
+
             </li>
           ))}
         </ul>

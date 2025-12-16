@@ -6,9 +6,33 @@ export default function ListaLibros() {
   const [libros, setLibros] = useState([]);
 
   // Cambia esta URL por la de tu API
-  const API_URL = "http://localhost:8000/Libros/TodosLosLibros";
+  const API_URL = "http://localhost:8000/Libros/TodosLosLibros";  
 
+
+  const eliminarLibro = async (idLibro: number) => {
+
+    try {
+      const response = await fetch(
+        `http://localhost:8000/Libros/BorrarLibro/${idLibro}`,
+        { method: "DELETE" }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al eliminar el libro");
+      }
+
+      
+
+      // Actualizar lista SIN recargar página
+      setLibros(prev => prev.filter(libro => libro.id !== idLibro));
+
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo eliminar el libro");
+    }
+  };
   useEffect(() => {
+
     const fetchLibros = async () => {
       try {
         const response = await fetch(API_URL);
@@ -55,6 +79,13 @@ export default function ListaLibros() {
             {/* Listas */}
             <p><strong>Autores:</strong> {libro.autores.map(a => a.nombre).join(", ")}</p>
             <p><strong>Categorías:</strong> {libro.categorias.map(c => c.descripcion).join(", ")}</p>
+              <button
+              onClick={() => eliminarLibro(libro.id)}
+              className="bg-red-800 px-3 py-1 rounded hover:bg-red-950">
+              Eliminar Libro
+              </button>
+
+            
           </div>
         ))}
       </div>

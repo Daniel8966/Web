@@ -7,6 +7,27 @@ export default function ListaAutores() {
 
   const API_URL = "http://localhost:8000/Autores/TodosLosAutores";
 
+    const eliminarAutor = async (idAutor: number) => {
+      
+    try {
+      const response = await fetch(
+        `http://localhost:8000/Autores/BorrarAutor/${idAutor}`,
+        { method: "DELETE" }
+
+
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al eliminar el autoo");
+      }
+      window.location.reload();
+
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo eliminar el autor");
+    }
+  };
+
   useEffect(() => {
     const fetchAutores = async () => {
       try {
@@ -67,7 +88,7 @@ export default function ListaAutores() {
                   Consultar Libros
                 </button>
               </Link>
-                <button className="bg-red-600 px-3 py-1 rounded hover:bg-red-700">
+                <button onClick={()=> eliminarAutor(autor.id)} className="bg-red-600 px-3 py-1 rounded hover:bg-red-700">
                   Eliminar
                 </button>
               </div>

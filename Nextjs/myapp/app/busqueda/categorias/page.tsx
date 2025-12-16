@@ -7,6 +7,26 @@ export default function ListaCategorias() {
 
   const API_URL = "http://localhost:8000/Categoria/TodosLosCategoriaes";
 
+    const eliminarCategoria = async (idCategoria: number) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/Categoria/BorrarCategoria/${idCategoria}`,
+        { method: "DELETE" }
+
+
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al eliminar la categoria");
+      }
+      window.location.reload();
+
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo eliminar la categoria");
+    }
+  };
+
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
@@ -66,7 +86,7 @@ export default function ListaCategorias() {
                 <button className="bg-green-800 px-3 py-1 rounded hover:bg-green-950">
                   Consultar Libros
                 </button>
-                <button className="bg-red-600 px-3 py-1 rounded hover:bg-red-700">
+                <button onClick={()=> eliminarCategoria(categoria.id)} className="bg-red-600 px-3 py-1 rounded hover:bg-red-700">
                   Eliminar
                 </button>
               </div>
