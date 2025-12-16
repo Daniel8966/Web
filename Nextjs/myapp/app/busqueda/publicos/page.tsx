@@ -7,6 +7,26 @@ export default function ListaAutores() {
 
   const API_URL = "http://localhost:8000/PublicoObjetivo/TodosLosPublicoes";
 
+  const eliminarPublico = async (idPublico: number) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/PublicoObjetivo/BorrarPublico/${idPublico}`,
+        { method: "DELETE" }
+
+
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al eliminar al publico ");
+      }
+      window.location.reload();
+
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo eliminar al publico");
+    }
+  };
+
   useEffect(() => {
     const fetchAutores = async () => {
       try {
@@ -62,10 +82,12 @@ export default function ListaAutores() {
                 <button className="bg-blue-600 px-3 py-1 rounded hover:bg-blue-700">
                   Editar
                 </button>
-                <button className="bg-green-800 px-3 py-1 rounded hover:bg-green-950">
-                  Consultar Libros
-                </button>
-                <button className="bg-red-600 px-3 py-1 rounded hover:bg-red-700">
+                <Link href={`/librosPublico/${autor.id}`}>
+                  <button className="bg-green-800 px-3 py-1 rounded hover:bg-green-950">
+                    Consultar Libros
+                  </button>
+                </Link>
+                <button onClick={()=> eliminarPublico(autor.id)} className="bg-red-600 px-3 py-1 rounded hover:bg-red-700">
                   Eliminar
                 </button>
               </div>

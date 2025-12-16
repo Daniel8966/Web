@@ -84,9 +84,11 @@ export default function ListaAutores() {
                 <button className="bg-blue-600 px-3 py-1 rounded hover:bg-blue-700">
                   Editar
                 </button>
+              <Link href={`/librosSerie/${autor.id}`}>
                 <button className="bg-green-800 px-3 py-1 rounded hover:bg-green-950">
                   Consultar Libros
                 </button>
+              </Link>
                 <button  onClick={()=> eliminarSerie(autor.id)} className="bg-red-600 px-3 py-1 rounded hover:bg-red-700">
                   Eliminar
                 </button>
