@@ -1,29 +1,33 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useParams } from "next/navigation";
+import BotonRegresar from "@/app/components/BotonRegresar";
 
 
 export default function AgregarAutor() {
+  const { id } = useParams(); // <-- obtiene autor_id de la URL
   const [nombre, setNombre] = useState("");
   const [mensaje, setMensaje] = useState(null);
-
+  let idAutor = id ;
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8000/Autores/RegistrarAutor", {
-        method: "POST",
+      const response = await fetch(`http://localhost:8000/Autores/actualizarAutor/${id}`, {
+        
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ nombre }),
+        body: JSON.stringify({idAutor, nombre }),
       });
 
       if (!response.ok) {
-        throw new Error("Error al registrar autor");
+        throw new Error("Error al editar autor");
       }
 
-      setMensaje("Autor registrado correctamente");
+      setMensaje("Autor editado correctamente");
       setNombre("");
     } catch (error) {
       setMensaje("Ocurrió un error al registrar el autor");
@@ -41,10 +45,11 @@ export default function AgregarAutor() {
         </div>
     </nav>
 
+    
     <div className="min-h-screen bg-slate-700 text-white flex flex-col items-center justify-center p-6">
 
       <div className="bg-slate-800 p-8 rounded-2xl shadow-xl w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center mb-6">Agregar Autor</h1>
+        <h1 className="text-3xl font-bold text-center mb-6">Actualizar Autor</h1>
 
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <label className="text-lg font-semibold">Nombre del Autor</label>
@@ -61,8 +66,9 @@ export default function AgregarAutor() {
             type="submit"
             className="w-full py-3 mt-4 bg-indigo-600 hover:bg-indigo-500 rounded-xl shadow-lg"
           >
-            Agregar Autor
+            Actualizar Autor
           </button>
+              <BotonRegresar/>
         </form>
 
         {mensaje && (

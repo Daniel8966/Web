@@ -1,8 +1,12 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useParams } from "next/navigation";
+import BotonRegresar from "@/app/components/BotonRegresar";
 
 export default function AgregarSerie() {
+  const { id } = useParams(); // <-- obtiene autor_id de la URL
+  
   const [numeroDeSerie, setSerie] = useState("");
   const [descripcion_serie, setDescripcionSerie] = useState("");
 
@@ -12,22 +16,22 @@ export default function AgregarSerie() {
     e.preventDefault();
 
     try {
-      const response = await fetch(
-        "http://localhost:8000/Serie/RegistrarSerie",
+      const response = await fetch(`http://localhost:8000/Serie/actualizarSerie/${id}`, 
+
         {
-          method: "POST",
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ numeroDeSerie, descripcion_serie }),
+          body: JSON.stringify({id, numeroDeSerie, descripcion_serie }),
         }
       );
 
       if (!response.ok) {
-        throw new Error("Error al registrar la serie");
+        throw new Error("Error al EDITAR  la serie");
       }
 
-      setMensaje("Serie registrada correctamente");
+      setMensaje("Serie editada correctamente");
 
       setSerie("");
       setDescripcionSerie("");
@@ -93,6 +97,8 @@ export default function AgregarSerie() {
             >
               Registrar Serie
             </button>
+                          <BotonRegresar/>
+            
           </form>
 
           {mensaje && (
