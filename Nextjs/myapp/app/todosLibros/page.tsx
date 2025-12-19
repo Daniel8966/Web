@@ -5,7 +5,6 @@ import Link from "next/link";
 export default function ListaLibros() {
   const [libros, setLibros] = useState([]);
 
-  // Cambia esta URL por la de tu API
   const API_URL = "http://localhost:8000/Libros/TodosLosLibros";  
 
 

@@ -79,9 +79,11 @@ export default function ListaAutores() {
 
             <p><strong>Descripcion:</strong> {autor.descripcion}</p>
               <div className="flex gap-4  justify-between mt-4">
-                <button className="bg-blue-600 px-3 py-1 rounded hover:bg-blue-700">
-                  Editar
-                </button>
+                <Link href={`/Editar/editarPublico/${autor.id}`}>
+                  <button className="bg-blue-800 px-3 py-1 rounded hover:bg-blue-950">
+                    Editar
+                  </button>
+                </Link>
                 <Link href={`/librosPublico/${autor.id}`}>
                   <button className="bg-green-800 px-3 py-1 rounded hover:bg-green-950">
                     Consultar Libros

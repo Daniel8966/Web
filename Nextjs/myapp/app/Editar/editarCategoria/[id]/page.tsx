@@ -1,19 +1,23 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useParams } from "next/navigation";
+import BotonRegresar from "@/app/components/BotonRegresar";
 
-export default function AgregarEditorial() {
-  const [descripcion, setNombre] = useState("");
+export default function AgregarCategoria() {
+  const [descripcion, setDescripcion] = useState("");
   const [mensaje, setMensaje] = useState(null);
+  const { id } = useParams();
 
+  let idCategoria = id 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const response = await fetch(
-        "http://localhost:8000/PublicoObjetivo/RegistrarPublico",
+       `http://localhost:8000/Categoria/actualizarCategoria/${id}`,
         {
-          method: "POST",
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
@@ -22,13 +26,14 @@ export default function AgregarEditorial() {
       );
 
       if (!response.ok) {
-        throw new Error("Error al registrar editorial");
+        throw new Error("Error al registrar categoría");
       }
 
-      setMensaje("publico objetivo registrado correctamente");
-      setNombre("");
+      setMensaje("Categoría editada correctamente");
+      setDescripcion("");
+
     } catch (error) {
-      setMensaje("Ocurrió un error al registrar el publico Objetivo");
+      setMensaje("Ocurrió un error al editada la categoría");
     }
   };
 
@@ -57,17 +62,17 @@ export default function AgregarEditorial() {
       <div className="min-h-screen bg-slate-700 text-white flex flex-col items-center justify-center p-6">
         <div className="bg-slate-800 p-8 rounded-2xl shadow-xl w-full max-w-md">
           <h1 className="text-3xl font-bold text-center mb-6">
-            Registrar Publico Objetivo
+            Editar Categoría
           </h1>
 
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-            <label className="text-lg font-semibold">Descripcion del publico obejtivo</label>
-            Por ejemplo que tipo de personas leen este libro; Adultos jovenes etc. 
+            <label className="text-lg font-semibold">Reindique la descripcion de la Categoría</label>
+
             <input
               type="text"
               value={descripcion}
-              onChange={(e) => setNombre(e.target.value)}
-              placeholder="A quien va dirigido"
+              onChange={(e) => setDescripcion(e.target.value)}
+              placeholder="Ingresa la descripción"
               className="p-3 rounded bg-slate-600 text-white outline-none focus:ring-2 focus:ring-indigo-400"
               required
             />
@@ -76,8 +81,9 @@ export default function AgregarEditorial() {
               type="submit"
               className="w-full py-3 mt-4 bg-indigo-600 hover:bg-indigo-500 rounded-xl shadow-lg"
             >
-              Registrar Publico Objetivo
+              Editar Categoría
             </button>
+                  <BotonRegresar/>
           </form>
 
           {mensaje && (
